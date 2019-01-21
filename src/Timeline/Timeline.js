@@ -2,24 +2,21 @@ import React, { Component } from 'react'
 import { View, FlatList, StyleSheet, ScrollView } from 'react-native'
 import {SearchBar} from 'react-native-elements'
 import { connect } from 'react-redux'
-import { studentFetch, onSelectedStudent } from '../actions/StudentActions'
+import { studentFetch, onSelectedStudent,changeProfiles } from '../actions/StudentActions'
 import Card1 from '../components/Cards/Card1'
 import Loader from '../components/common/Spinner'
 import { List } from "react-native-elements"
 
 export class Timeline extends Component {
-  state = {
-    loading: false,
-    error: null,
-    data: [],
-  };
+  
 
   componentDidMount() {
     this.props.studentFetch();
-    console.log("Profile")
-    if (this.props.students) {
-      this.setState({ data: this.props.students })
-    }
+    console.log("fetching Profiles")
+    // if (this.props.students) {
+    //   console.log("con true",this.props.students);
+    //   this.setState({ data: this.props.students })
+    // }
   }
 
   renderRow({ item }) {
@@ -27,13 +24,6 @@ export class Timeline extends Component {
       <Card1
 
         student={item}
-      // title={item.name}
-      // subtitle={item.email}
-      // onPress={() => {
-      //   this.props.onSelectedStudent(item.uid)
-      //   Actions.profileSelected()
-      // }}
-
       />
     )
   }
@@ -45,7 +35,7 @@ export class Timeline extends Component {
 
       return itemData.indexOf(textData) > -1;
     });
-    this.setState({ data: newData });
+    this.props.changeProfiles(newData)
   };
 
   renderHeader = () => {
@@ -65,13 +55,14 @@ export class Timeline extends Component {
   render() {
     let comp = <Loader />
     let fetchStatus = "Student not fetched yet"
-    if (this.props.students.length > 0) {
+    if (this.props.profiles.length > 0) {
       fetchStatus = "Students Fetched"
-      console.log(this.props.students)
+      console.log("from Students",this.props.students)
+      console.log("from profile",this.props.profiles)
       comp = (
         <List>
           <FlatList
-            data={this.state.data}
+            data={this.props.profiles}
             renderItem={this.renderRow}
             keyExtractor={item => item.email}
             ItemSeparatorComponent={this.renderSeparator}
@@ -102,8 +93,8 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => {
-  const { students } = state.student
-  return { students }
+  const { students,profiles } = state.student
+  return { students,profiles }
 }
 
-export default connect(mapStateToProps, { studentFetch, onSelectedStudent })(Timeline)
+export default connect(mapStateToProps, { studentFetch, onSelectedStudent,changeProfiles })(Timeline)

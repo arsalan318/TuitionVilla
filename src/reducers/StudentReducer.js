@@ -15,6 +15,7 @@ import {
     PASSWORD_CHANGED,
     IMAGE_PICKED,
     STUDENT_FETCH_SUCCESS,
+    CHANGE_PROFILES,
     SELECTED_STUDENT_FETCH
 } from '../actions/types';
 
@@ -33,13 +34,16 @@ const INITIAL_STATE = {
     image: null,
     error: "",
     students: [],
-    selectedStudent:null
+    selectedStudent:null,
+    profiles:[]
 };
 
 
 export default (state = INITIAL_STATE, action) => {
 
     switch (action.type) {
+        case CHANGE_PROFILES:
+            return{...state,profiles:action.payload}
 
         case SELECTED_STUDENT_FETCH:
             console.log("fetched Student: "+action.payload);            
@@ -47,7 +51,7 @@ export default (state = INITIAL_STATE, action) => {
 
         case STUDENT_FETCH_SUCCESS:
             console.log(action.payload);
-            return {...state,students:action.payload};
+            return {...state,students:action.payload,profiles:action.payload};
 
         case IMAGE_PICKED:
             console.log(state)

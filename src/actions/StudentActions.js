@@ -17,9 +17,15 @@ import {
   SIGNUP_STUDENT_SUCCESS,
   IMAGE_PICKED,
   STUDENT_FETCH_SUCCESS,
-  SELECTED_STUDENT_FETCH
+  SELECTED_STUDENT_FETCH,
+  CHANGE_PROFILES
 } from './types';
 
+export const changeProfiles=(newData)=>{
+  return(dispatch)=>{
+    dispatch({ type: CHANGE_PROFILES, payload: newData });
+  }
+}
 
 export const studentFetch = () => {
   console.log("Fetching Student");
