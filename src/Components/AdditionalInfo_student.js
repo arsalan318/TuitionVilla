@@ -1,34 +1,34 @@
 import React, { Component } from 'react';
 import { Text, ScrollView, View, TouchableOpacity } from 'react-native';
 import { Button, FormInput, CheckBox } from 'react-native-elements';
-import Input from '../common/Input';
 import { connect } from 'react-redux';
-import { teacherUpdate, ClassInput, SubjectInput, signUser } from '../actions';
+import { Actions } from 'react-native-router-flux';
 import Spinner from '../common/Spinner';
+import {
+    studentUpdate,
+    subjectsChanged,
+    signUpHandler
+
+} from '../actions/StudentActions';
 class AdditionalInfo extends Component {
     state = {
-        nine: false,
-        ten: false,
-        eleven: false,
-        twelve: false,
         physics: false,
         chemistry: false,
-        math: false
+        math: false,
+        english: false,
+        urdu: false,
+        accounts: false,
+        biology: false,
+        other: false,
     }
-    onClassChange = (condition, val) => {
-        this.props.ClassInput({ condition, val });
-    }
+    SignInPressed = () => {
+        const { email, password, name, address, phone, cnic, age, Class, institute, subjects, uri } = this.props;
+        this.props.signUpHandler({ email, password, name, address, phone, cnic, age, Class, institute, subjects, uri });
 
-    onSubjectChange = (condition, val) => {
-        this.props.SubjectInput({ condition, val });
     }
     Checkpress() {
 
         this.setState({ checked: !this.state.checked });
-    }
-    SignInPressed() {
-        const { email, password, name, phone, address, cnic, age, education, experience, subjects, classes, uri } = this.props;
-        this.props.signUser({ email, password, name, phone, address, cnic, age, education, experience, subjects, classes, uri });
     }
 
     renderSignInButton() {
@@ -38,54 +38,37 @@ class AdditionalInfo extends Component {
 
         return (
             <TouchableOpacity style={styles.ButtonStyle} onPress={this.SignInPressed.bind(this)}>
-                    <Text style={styles.buttonText}>Sign Up</Text>
-                </TouchableOpacity>
+                <Text style={styles.buttonText}>Sign Up</Text>
+            </TouchableOpacity>
 
         );
     }
-    
+    onSubjectChange = (condition, val) => {
+        this.props.subjectsChanged({ condition, val });
+    }
+
     render() {
         return (
             <ScrollView>
                 <View style={styles.containerStyle}>
-                    <Text style={styles.textStyle}>Education</Text>
+                    <Text style={styles.textStyle}>Class</Text>
                     <FormInput
-                        placeholder='Education'
+                        placeholder='Class'
                         inputStyle={styles.inputStyle}
-                        onChangeText={value => this.props.teacherUpdate({ prop: 'education', value })}
-                        value={this.props.education}
-                    />
-                </View>
-                <View style={styles.containerStyle}>
-                    <Text style={styles.textStyle}>Experience</Text>
-                    <FormInput
-                        placeholder='Experience (in Years)'
-                        inputStyle={styles.inputStyle}
-                        onChangeText={value => this.props.teacherUpdate({ prop: 'experience', value })}
-                        value={this.props.experience}
-                    />
-                </View>
-                <Text style={styles.textStyle}>Class</Text>
-                <View style={styles.containerStyle}>
-                    <CheckBox title='IX'
-                        checked={this.state.nine}
-                        onPress={() => { this.setState({ nine: !this.state.nine }); this.onClassChange(!this.state.nine, "nine") }}
-                    />
-                    <CheckBox title='X'
-                        checked={this.state.ten}
-                        onPress={() => { this.setState({ ten: !this.state.ten }); this.onClassChange(!this.state.ten, "ten") }}
-                    />
-                    <CheckBox title='XI'
-                        checked={this.state.eleven}
-                        onPress={() => { this.setState({ eleven: !this.state.eleven }); this.onClassChange(!this.state.eleven, "eleven") }}
-                    />
-                    <CheckBox title='XII'
-                        checked={this.state.twelve}
-                        onPress={() => { this.setState({ twelve: !this.state.twelve }); this.onClassChange(!this.state.twelve, "twelve") }}
-                    />
+                        onChangeText={value => this.props.studentUpdate({ prop: 'Class', value })}
 
+                    />
                 </View>
-                <Text style={styles.textStyle}>Subject Specialization</Text>
+                <View style={styles.containerStyle}>
+                    <Text style={styles.textStyle}>School/College/University</Text>
+                    <FormInput
+                        placeholder='Institute Name'
+                        inputStyle={styles.inputStyle}
+                        onChangeText={value => this.props.studentUpdate({ prop: 'institute', value })}
+
+                    />
+                </View>
+                <Text style={styles.textStyle}>Subjects Required</Text>
                 <View style={styles.containerStyle}>
                     <CheckBox title='Physics'
                         checked={this.state.physics}
@@ -99,7 +82,26 @@ class AdditionalInfo extends Component {
                         checked={this.state.chemistry}
                         onPress={() => { this.setState({ chemistry: !this.state.chemistry }); this.onSubjectChange(!this.state.chemistry, "chemistry") }}
                     />
-
+                    <CheckBox title='English'
+                        checked={this.state.english}
+                        onPress={() => { this.setState({ english: !this.state.english }); this.onSubjectChange(!this.state.english, "english") }}
+                    />
+                    <CheckBox title='Urdu'
+                        checked={this.state.urdu}
+                        onPress={() => { this.setState({ urdu: !this.state.urdu }); this.onSubjectChange(!this.state.urdu, "urdu") }}
+                    />
+                    <CheckBox title='Accounts'
+                        checked={this.state.accounts}
+                        onPress={() => { this.setState({ accounts: !this.state.accounts }); this.onSubjectChange(!this.state.accounts, "accounts") }}
+                    />
+                    <CheckBox title='Biology'
+                        checked={this.state.biology}
+                        onPress={() => { this.setState({ biology: !this.state.biology }); this.onSubjectChange(!this.state.biology, "biology") }}
+                    />
+                    <CheckBox title='Other'
+                        checked={this.state.other}
+                        onPress={() => { this.setState({ other: !this.state.other }); this.onSubjectChange(!this.state.other, "other") }}
+                    />
                 </View>
                 <View>
                     <Text style={styles.errorTextStyle}>
@@ -110,7 +112,6 @@ class AdditionalInfo extends Component {
                 <View>
                     {this.renderSignInButton()}
                 </View>
-
             </ScrollView>
         );
     }
@@ -119,10 +120,7 @@ class AdditionalInfo extends Component {
 const styles = {
     containerStyle: {
         paddingTop: 10,
-        paddingBottom: 10,
-        borderBottomWidth: 1,
-        marginBottom: 20,
-
+        paddingBottom: 10
     },
     inputStyle: {
         height: 50,
@@ -143,7 +141,6 @@ const styles = {
     textStyle: {
         paddingLeft: 15,
         fontSize: 18,
-        fontWeight: 'bold',
         paddingBottom: 5
 
     },
@@ -172,14 +169,12 @@ const styles = {
         alignSelf: 'center',
         color: 'red'
     }
-
 };
 
 const mapStateToProps = (state) => {
-    const {  email, password, name, phone, address, cnic, age, education, experience, subjects, classes } = state.teacher;
-    const{uri}= state.student;
-    const {SignInLoading, error} = state.sign;
-    return { SignInLoading, email,error, password, name, phone, address, cnic, age, education, experience, subjects, classes, uri };
-};
+    const { email, password, name, address, phone, cnic, age, Class, institute, subjects, uri } = state.student;
+    const { SignInLoading, error } = state.sign;
+    return { email, password, name, address, phone, cnic, age, Class, institute, subjects, uri, SignInLoading, error };
+}
 
-export default connect(mapStateToProps, { teacherUpdate, ClassInput, SubjectInput, signUser })(AdditionalInfo);
+export default connect(mapStateToProps, { studentUpdate, subjectsChanged, signUpHandler })(AdditionalInfo)

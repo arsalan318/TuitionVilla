@@ -1,46 +1,47 @@
 import React, { Component } from 'react';
+import { Text, ScrollView, View } from 'react-native';
 import { Button, FormInput } from 'react-native-elements';
-import Input from '../common/Input';
-import { teacherUpdate } from '../actions/TeacherActions';
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
-import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
 import PickImage from './PickImage';
-class SignUp extends Component {
+import { connect } from 'react-redux';
+import {
+    studentUpdate,
+    signUpHandler,
 
+} from '../actions/StudentActions';
 
-    
+class LoginDetails extends Component {
+
+   
+
     render() {
         return (
             <ScrollView>
                 <View style={styles.containerStyle}>
-
                     <Text style={styles.textStyle}>Email</Text>
                     <FormInput
-                        placeholder='example@gmail.com'
+                        placeholder='Email'
                         inputStyle={styles.inputStyle}
-                        onChangeText={value => this.props.teacherUpdate({ prop: 'email', value })}
-                        value={this.props.email}
-
+                        onChangeText={value => this.props.studentUpdate({ prop: 'email', value })}
+                        keyboardType="email-address"
                     />
                 </View>
                 <View style={styles.containerStyle}>
                     <Text style={styles.textStyle}>Password</Text>
                     <FormInput
-                        placeholder='password'
+                        placeholder='Password'
                         inputStyle={styles.inputStyle}
+                        onChangeText={value => this.props.studentUpdate({ prop: 'password', value })}
                         secureTextEntry
-                        onChangeText={value => this.props.teacherUpdate({ prop: 'password', value })}
-                        value={this.props.password}
-
                     />
                 </View>
                 <View style={styles.containerStyle}>
                     <Text style={styles.textStyle}>Profile Picture</Text>
                     <PickImage />
                 </View>
+              
 
-                           </ScrollView>
+
+            </ScrollView>
         );
     }
 }
@@ -48,10 +49,7 @@ class SignUp extends Component {
 const styles = {
     containerStyle: {
         paddingTop: 5,
-        paddingBottom: 10,
-        borderBottomWidth: 1,
-        marginBottom: 20,
-
+        paddingBottom: 5
     },
     inputStyle: {
         height: 50,
@@ -61,29 +59,22 @@ const styles = {
         borderRadius: 10,
         width: "100%",
         fontSize: 18,
-        fontWeight: '300',
         paddingLeft: 10
 
     },
     textStyle: {
         paddingLeft: 15,
         fontSize: 18,
-        fontWeight: 'bold',
         paddingBottom: 5
     },
-    buttonText: {
-        alignSelf: 'center',
-        fontSize: 18,
-        color: '#fff'
-
-    }
+    buttonStyle: {
+        borderRadius: 10,
+    },
 };
-
 
 const mapStateToProps = (state) => {
-    const { email, password, name, phone, address, cnic, age } = state.teacher;
+    const { email, password, name, address, phone, cnic, age, Class, institute, subjects, uri } = state.student;
+    return { email, password, name, address, phone, cnic, age, Class, institute, subjects , uri}
+}
 
-    return { email, password, name, phone, address, cnic, age };
-};
-
-export default connect(mapStateToProps, { teacherUpdate })(SignUp);
+export default connect(mapStateToProps, { studentUpdate, signUpHandler })(LoginDetails)

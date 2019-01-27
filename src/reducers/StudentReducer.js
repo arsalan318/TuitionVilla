@@ -1,22 +1,17 @@
 import {
-    NAME_CHANGED,
-    ADDRESS_CHANGED,
-    CONTACT_CHANGED,
-    CNIC_CHANGED,
-    AGE_CHANGED,
-    CLASS_CHANGED,
-    INSTITUTE_CHANGED,
-    SUBJECTS_CHANGED,
     STUDENT_CREATE_SUCCESS,
     STUDENT_CREATE_FAIL,
-    SIGNUP_STUDENT_SUCCESS,
-    SIGNUP_STUDENT_FAIL,
-    EMAIL_CHANGED,
-    PASSWORD_CHANGED,
+    STUDENT_UPDATE,
     IMAGE_PICKED,
+    IMAGE_UPLOAD,
+    TURN_IMAGE_LOAD,
+    SUBJECTS_CHANGED,
+    SIGN_OUT,
     STUDENT_FETCH_SUCCESS,
-    CHANGE_PROFILES,
-    SELECTED_STUDENT_FETCH
+    SELECTED_STUDENT_FETCH,
+    STUDENTS_FETCH_SUCCESS,
+    STUDENT_CHANGE_PROFILES,
+    CURRENT_STUDENT_FETCH_SUCCESS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -24,7 +19,7 @@ const INITIAL_STATE = {
     password: '',
     name: "",
     address: "",
-    contact: "",
+    phone: "",
     cnic: "",
     age: "",
     Class: "",
@@ -34,93 +29,55 @@ const INITIAL_STATE = {
     image: null,
     error: "",
     students: [],
-    selectedStudent:null,
-    profiles:[]
+    uri: null,
+    imageLoading: false,
+    selectedStudent: null,
+    profiles: []
 };
 
 
 export default (state = INITIAL_STATE, action) => {
 
     switch (action.type) {
-        case CHANGE_PROFILES:
-            return{...state,profiles:action.payload}
 
-        case SELECTED_STUDENT_FETCH:
-            console.log("fetched Student: "+action.payload);            
-            return{...state,selectedStudent:action.payload}
-
-        case STUDENT_FETCH_SUCCESS:
-            console.log(action.payload);
-            return {...state,students:action.payload,profiles:action.payload};
-
-        case IMAGE_PICKED:
-            console.log(state)
-            return { ...state, image: { uri: action.payload.uri, base64: payload.data } }
-
-        case EMAIL_CHANGED:
-
-            return { ...state, email: action.payload };
-
-        case PASSWORD_CHANGED:
-
-            return { ...state, password: action.payload };
-
-        case NAME_CHANGED:
-
-            return { ...state, name: action.payload };
-
-        case ADDRESS_CHANGED:
-            return { ...state, address: action.payload };
-
-        case CONTACT_CHANGED:
-            return { ...state, contact: action.payload };
-
-        case CNIC_CHANGED:
-            return { ...state, cnic: action.payload };
-
-        case AGE_CHANGED:
-            return { ...state, age: action.payload };
-
-        case CLASS_CHANGED:
-            return { ...state, Class: action.payload };
-
-        case INSTITUTE_CHANGED:
-            return { ...state, institute: action.payload };
-
+        case STUDENT_UPDATE:
+            return { ...state, [action.payload.prop]: action.payload.value };
+        case STUDENT_CREATE_SUCCESS:
+            return { ...state, ...INITIAL_STATE };
         case SUBJECTS_CHANGED:
-            console.log("action:" + action)
-            let selectedSubjects = state.subjects;
-
-            if (action.payload.condition === true) {
-                selectedSubjects = state.subjects;
-                selectedSubjects.push(action.payload.text);
+            var Subject = state.subjects;
+            if (action.payload.condition) {
+                Subject.push(action.payload.val);
             }
             else {
-                selectedSubjects = state.subjects.filter((subject) => {
-                    return subject !== action.payload.text
-                });
+                Subject.splice(Subject.indexOf(action.payload.val), 1);
+
             }
-            return { ...state, subjects: selectedSubjects };
-
-        case SIGNUP_STUDENT_SUCCESS:
-            console.log(state)
-            console.log("Signup Success")
-            return { ...state, student: action.payload }
-
-        case SIGNUP_STUDENT_FAIL:
-            console.log(state)
-            console.log("Signup FAILED " + action.payload)
-            return state
-
-        case STUDENT_CREATE_SUCCESS:
-            console.log("Student create Success")
-            return state
-
+            return { ...state, subjects: Subject }
         case STUDENT_CREATE_FAIL:
-            console.log("Student create FAIL " + action.payload)
-            return state
-
-
+            return { ...state, error: "Error in Creating Account", imageLoading: false }
+        case TURN_IMAGE_LOAD:
+            return { ...state, imageLoading: true }
+        case IMAGE_UPLOAD:
+            //console.log("hello jee",action.payload);
+            return { ...state, uri: action.payload, imageLoading: false }
+        case SIGN_OUT:
+            //console.log("signed out!");
+            return { ...state, ...INITIAL_STATE }
+        case STUDENT_FETCH_SUCCESS:
+            console.log(action.payload.uri);
+            console.log(action.payload.email);
+            console.log(action.payload.name);
+            return { ...state, uri: action.payload.uri, name: action.payload.name, email: action.payload.email };
+        case SELECTED_STUDENT_FETCH:
+            console.log("fetched Student: " + action.payload);
+            return { ...state, selectedStudent: action.payload }
+        case STUDENTS_FETCH_SUCCESS:
+            return { ...state, students: action.payload, profiles:action.payload };
+        case STUDENT_CHANGE_PROFILES:
+            return { ...state, profiles: action.payload }
+        case CURRENT_STUDENT_FETCH_SUCCESS:
+            return {...state,selectedStudent:action.payload}
         default:
             return state;
     }

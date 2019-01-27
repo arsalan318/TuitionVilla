@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
-const ListItem =()=> {
+import {connect} from 'react-redux';
+import {teacherFetch} from '../actions';
+class ListItem extends Component {
     
+        onProfileClicked(){
+            console.log("called!");
+            this.props.teacherFetch();
+        }
+        render(){
         return (
             <View style={styles.outerStyle}>
 
@@ -14,7 +21,7 @@ const ListItem =()=> {
                         <Text style={styles.contactTextStyle}>Contact</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.contactButtonStyle}>
+                    <TouchableOpacity style={styles.contactButtonStyle} onPress={()=>{this.onProfileClicked.bind(this)}}>
 
                         <Text style={styles.contactTextStyle}>Profile</Text>
 
@@ -35,6 +42,7 @@ const ListItem =()=> {
                 </View>
             </View>
         );
+        }
     
 }
 const styles = {
@@ -87,4 +95,7 @@ const styles = {
     }
 };
 
-export default ListItem;
+
+export default connect(null, {
+     teacherFetch
+})(ListItem);
