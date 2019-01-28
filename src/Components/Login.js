@@ -39,7 +39,10 @@ class Login extends Component {
         }
 
         return (
-            <TouchableOpacity style={styles.ButtonStyle} onPress={this.onLogInPress.bind(this)}>
+            <TouchableOpacity style={styles.ButtonStyle} onPress={this.onLogInPress.bind(this)}
+            disabled={(this.props.student || this.props.teacher)?false:true}
+            
+            >
                 <Text style={styles.buttonText}>Log in</Text>
             </TouchableOpacity>
 
@@ -60,8 +63,12 @@ class Login extends Component {
 
     }
     render() {
-        const widthScreen = Dimensions.get("window").width
-
+        let err="";
+        let btnColor='#000080';
+        if(this.props.teacher===false && this.props.student===false){
+            err="Select login type"
+            btnColor="skyblue"
+        }
         return (
             <ImageBackground source={require('../../Icons/background.jpg')} style={{ width: '100%', height: '100%' }}>
                 <View style={styles.loginStyle}>
@@ -94,13 +101,17 @@ class Login extends Component {
                     <View>
                         <Text style={styles.errorTextStyle}>
                             {this.props.error}
+                            {err}
                         </Text>
                     </View>
                     <View>
                         {this.renderLogInButton()}
                     </View>
                     <View>
-                        <TouchableOpacity style={styles.ButtonStyle} onPress={this.SignUpPressed.bind(this)}>
+                        <TouchableOpacity style={styles.ButtonStyle} onPress={this.SignUpPressed.bind(this)}
+                        disabled={(this.props.student || this.props.teacher)?false:true}
+                        
+                        >
                             <Text style={styles.buttonText}>Sign Up</Text>
                         </TouchableOpacity>
                     </View>
