@@ -38,6 +38,13 @@ class drawer extends Component {
 
 
     render() {
+        let emailFont=16;
+        if(this.props.email){
+            if(this.props.email.length>14){
+                emailFont=9
+            }
+            console.log("Email Length:"+this.props.email.length)
+        }
         return (
             <View style={{ backgroundColor: '#2e2ed3', height: "100%" }}>
                 <View style={styles.containerStyle}>
@@ -55,7 +62,7 @@ class drawer extends Component {
 
                             <Text style={styles.NameTextStyle}>{this.props.name}</Text>
 
-                            <Text style={styles.EmailTextStyle}>{this.props.email}</Text>
+                            <Text style={[styles.EmailTextStyle,{fontSize:emailFont}]}>{this.props.email}</Text>
                         </View>
                     </View>
                     <TouchableOpacity style={styles.ButtonStyle} onPress={() => { this.onHomePress() }}>
@@ -126,7 +133,6 @@ const styles = {
         marginLeft: 40
     },
     EmailTextStyle: {
-        fontSize: 16,
         color: '#c2c2d6',
         marginLeft: 40
     }
